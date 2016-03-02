@@ -3,7 +3,7 @@
 lvc=$(which lvcreate);
 lvr=$(which lvremove);
 
-cat vm_backup.cfg | while read iName iVolumeGroup; do
+cat kvm-lvm-backup.cfg | while read iName iVolumeGroup; do
 	if [ -z "${iName}" ]; then echo -e "\nNo LVM Name or Volume Group Specified...Skipping\n"; continue; fi;
 	if [ -z "${iVolumeGroup}" ]; then echo -e "\nNo LVM Name or Volume Group Specified...Skipping\n"; continue; fi;
 	lv_path=$(lvscan | grep "`echo ${iVolumeGroup}\/${iName}`" | awk '{print $2}' | tr -d "'");
