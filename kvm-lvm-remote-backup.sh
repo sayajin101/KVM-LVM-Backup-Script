@@ -24,7 +24,7 @@ scriptPath=$(dirname "${BASH_SOURCE[0]}");
 # Check if ssh key exists
 [ ! -f "${scriptPath}/key/lvm-backup" ] && { ssh-keygen -b 4096 -q -t rsa -N "" -C "Remote KVM LVM Backups" -f "${scriptPath}/key/lvm-backup" && chmod 644 ${scriptPath}/key/lvm-backup* && echo -e "\nSSH Key has been created in ${scriptP$
 
-cat ${configFile} | while read iName iVolumeGroup iRemoteMount iCompressionLocation; do
+cat ${configFile} | grep -v '^#' | while read iName iVolumeGroup iRemoteMount iCompressionLocation; do
 	# Check if backup file system is mounted on remote server if not then try to mount the backup volume
 	mountCheck=$(ssh -p ${remotePort} -i ${scriptPath}/key/lvm-backup ${remoteUser}@${remoteAddress} "mount | grep -qs '${iRemoteMount}' && echo 'mounted' || { mount ${iRemoteMount} > /dev/null 2>&1 && [ ${?} -eq 0 ] && echo 'mount successful' || echo 'something w$
 
