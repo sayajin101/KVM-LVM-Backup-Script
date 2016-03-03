@@ -1,5 +1,5 @@
 # KVM-LVM-Backup-Script
-Backup Script for KVM's rung on LVM's
+Backup Script for KVM's run on LVM's
 
 * This script is designed to do Live LVM Snapshot backups of KVM Virtual Machines
 * Once it has created the LVM snapshot it will dd the LVM image & gzip it at the same time to a specified location.
