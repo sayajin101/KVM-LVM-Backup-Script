@@ -1,7 +1,7 @@
 #!/bin/bash
 
 [ ! -f kvm-lvm-backup.cfg ] && { echo -e "\nConfig file not found, creating it\nPlease add your LVMs to the config file becore continuing\n" && touch kvm-lvm-backup.cfg && exit 1; };
-[ ! -s kvm-lvm-backup.cfg ] && { echo -e "\nkvm-lvm-backup.cfg is empty, please fill in your LVM details" && exit 1; }
+[ ! -s kvm-lvm-backup.cfg ] && { echo -e "\nkvm-lvm-backup.cfg is empty, please fill in your LVM details" && exit 1; };
 
 lvc=$(which lvcreate);
 lvr=$(which lvremove);
