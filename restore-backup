@@ -16,6 +16,13 @@ virsh define /tmp/that-vm.xml
 virsh edit VirtualServerName
 <disk
   <source dev='/dev/mapper/vg_name-lv_root'/>
+  
+# Change the bridge interface in the XML file
 
 # Start the restored Virtual Machine
 virsh start VirtualServerName
+
+# Once the server is up you will need to modify the network file in /etc/udev/rules.d & change the mac address to the new one.
+by default it will create a 2nd interface with the new MAC address, just deleted that one
+
+# Also update the MAC address in the /etc/sysconfin/network-scripts/ifcfg-eth0 file to the new one
