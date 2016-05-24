@@ -12,5 +12,10 @@ gunzip -c /backup/vms/vg_name-lv_swap.2016-05-24-16.54.52.gz | dd of=/dev/vg_nam
 # Create the New Virtual Machine from the exported XML file
 virsh define /tmp/that-vm.xml
 
+# Change the storage path
+virsh edit VirtualServerName
+<disk
+  <source dev='/dev/mapper/vg_name-lv_root'/>
+
 # Start the restored Virtual Machine
 virsh start VirtualServerName
