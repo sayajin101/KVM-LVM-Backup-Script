@@ -5,6 +5,10 @@ virsh dumpxml VirtualServerName > /backup/vms/VirtualServerName.xml
 sed -i /uuid/d /backup/vms/VirtualServerName.xml
 sed -i '/mac address/d' /backup/vms/VirtualServerName.xml
 
+# Uncompress & restore the image
+gunzip -c /backup/vms/vg_name-lv_root.2016-05-24-16.54.52.gz | dd of=/dev/vg_name/lv_root bs=16MB
+gunzip -c /backup/vms/vg_name-lv_swap.2016-05-24-16.54.52.gz | dd of=/dev/vg_name/lv_swap bs=16MB
+
 # Create the New Virtual Machine from the exported XML file
 virsh define /tmp/that-vm.xml
 
