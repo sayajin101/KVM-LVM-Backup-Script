@@ -1,0 +1,12 @@
+# Dump XML File
+virsh dumpxml VirtualServerName > /backup/vms/VirtualServerName.xml
+
+# Remove the uuid & mac address, will auto generate new.
+sed -i /uuid/d /backup/vms/VirtualServerName.xml
+sed -i '/mac address/d' /backup/vms/VirtualServerName.xml
+
+# Create the New Virtual Machine from the exported XML file
+virsh define /tmp/that-vm.xml
+
+# Start the restored Virtual Machine
+virsh start VirtualServerName
