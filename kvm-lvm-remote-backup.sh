@@ -37,7 +37,7 @@ cat ${configFile} | grep -v '^#' | while read iName iVolumeGroup iRemotePath iCo
 		mountCheck=$(ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "mount | grep -qs '${iRemotePath}' && echo 'mounted' || { mount ${iRemotePath} > /dev/null 2>&1 && [ ${?} -eq 0 ] && echo 'mount successful' || echo 'something went wrong'; }";);
 
 		# Backup volume remote mount check result check
-		[ "${mountCheck}" == "something went wrong" ] && { echo "Remote Server backup mount is not mounted & mount attemtp failed...exiting" && exit 1; };
+		[ "${mountCheck}" == "something went wrong" ] && { echo "Remote Server backup mount is not mounted & mount attemtp failed...exiting" && continue; };
 	fi;
 
 	lv_path=$(lvscan | grep "`echo ${iVolumeGroup}\/${iName}`" | awk '{print $2}' | tr -d "'");
