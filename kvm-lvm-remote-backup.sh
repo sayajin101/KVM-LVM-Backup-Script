@@ -26,11 +26,11 @@ scriptPath=$(dirname "${BASH_SOURCE[0]}");
 [ ! -f "${scriptPath}/key/lvm-backup" ] && { ssh-keygen -b 4096 -q -t rsa -N "" -C "Remote KVM LVM Backups" -f "${scriptPath}/key/lvm-backup" && chmod 600 ${scriptPath}/key/lvm-backup* && echo -e "\nSSH Key has been created in ${scriptPath}/key called lvm-backup.pub\nYou must copy the key to your remote server.\nSSH key copy command: cat ${scriptPath}/key/lvm-backup.pub | ssh user@hostname 'cat >> .ssh/authorized_keys'\n" && exit 1; };
 
 cat ${configFile} | grep -v '^#' | while read iName iVolumeGroup iRemotePath iCompressionLocation iRemoteStorgeType i; do
-	if [ -z "${iName}" ]; then echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n"; continue; fi;
-	if [ -z "${iVolumeGroup}" ]; then echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n"; continue; fi;
-	if [ -z "${iRemotePath}" ]; then echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n"; continue; fi;
-	if [ -z "${iCompressionLocation}" ]; then echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n"; continue; fi;
-	if [ -z "${iRemoteStorgeType}" ]; then echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n"; continue; fi;
+	[ -z "${iName}" ] && { echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n" && continue; };
+	[ -z "${iVolumeGroup}" ] && { echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n" && continue; };
+	[ -z "${iRemotePath}" ] && { echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n" && continue; };
+	[ -z "${iCompressionLocation}" ] && { echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n" && continue; };
+	[ -z "${iRemoteStorgeType}" ] && { echo -e "\nNo LVM Name, Volume Group, Remote Mount or Compression Location Specified...Skipping\n" && continue; };
 
 	if [ "${iRemoteStorgeType}" == "mounted" ]; then
 		# Check if backup file system is mounted on remote server if not then try to mount the backup volume
@@ -41,7 +41,7 @@ cat ${configFile} | grep -v '^#' | while read iName iVolumeGroup iRemotePath iCo
 	fi;
 
 	lv_path=$(lvscan | grep "`echo ${iVolumeGroup}\/${iName}`" | awk '{print $2}' | tr -d "'");
-	if [ -z "${lv_path}" ]; then echo -e "\nNo such LVM exists: ${lv_path}\nCorrect path name in config file\n"; continue; fi;
+	[ -z "${lv_path}" ] && { echo -e "\nNo such LVM exists: ${lv_path}\nCorrect the path name in config file\n" && continue; };
 	size=$(lvs ${lv_path} -o LV_SIZE --noheadings --units g --nosuffix | tr -d ' ');
 	if [ "${iCompressionLocation}" == "remote" ]; then
 		${lvc} -s --size=${size}G -n ${iName}_snap ${lv_path};
