@@ -66,6 +66,7 @@ for backupList in `grep -v '^#' ${configFile} | awk '{print $1}'`; do
 
 	date=$(date +%Y-%m-%d_%H.%M.%S);
 
+#	virsh dumpxml mail10.megs.co.za > meh.xml
 	if [ "${iCompressionLocation}" == "remote" ]; then
 		${lvc} -s --size=${size}G -n ${iName}_snap ${lv_path};
 		copyBackup() {
