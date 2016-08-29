@@ -8,6 +8,7 @@ remotePort="22";
 remoteUser="root";
 remoteAddress="backup.server.ip";
 localBackupPath="/backup/path";
+backupRevisions="2";
 #--========================================--#
 
 scriptPath=$(dirname "${BASH_SOURCE[0]}");
@@ -33,6 +34,9 @@ log() {
 		echo "[`date +%Y-%m-%d_%H.%M.%S`] ${1} ${2}" >> ${scriptPath}/logs/complete.log;
 	fi;
 }
+
+# Fix tail count
+backupRevisions=$((${backupRevisions} + 1));
 
 # Get Hostname
 hName=$(hostname);
@@ -84,6 +88,7 @@ lvmBackup() {
 				copyBackup;
 			else
 				${lvr} -f ${lv_path}_snap;
+				ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "ls -dt ${iRemotePath}/vms/${hName}.${iVolumeGroup}-${iName}* | tail -n +${backupRevisions} | xargs rm -f;";
 				log success "Copy for ${hName}.${iVolumeGroup}-${iName} to backup server ${remoteAddress} was successful.";
 			fi;
 		};
@@ -102,6 +107,7 @@ lvmBackup() {
 				copyBackup;
 			else
 				${lvr} -f ${lv_path}_snap;
+				ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "ls -dt ${iRemotePath}/vms/${hName}.${iVolumeGroup}-${iName}* | tail -n +${backupRevisions} | xargs rm -f;";
 				log success "Copy for ${hName}.${iVolumeGroup}-${iName} to backup server ${remoteAddress} was successful.";
 			fi;
 		};
@@ -120,6 +126,7 @@ kvmBackup() {
 
 	# Dump KVM Domain XML file
 	virsh dumpxml ${iDomName} | ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "cat > ${iRemotePath}/vms/${iDomName}.${date}.xml"
+	ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "ls -dt ${iRemotePath}/vms/${iDomName}.* | tail -n +${backupRevisions} | xargs rm -f;";
 
 	for lvm in `virsh dumpxml "${iDomName}" | grep 'source dev' | grep -o "'.*'" | tr -d "'" | rev | cut -d '/' -f1 | rev`; do
 		iVolumeGroup=$(echo "${lvm}" | awk -F '-' '{print $1}');
@@ -161,6 +168,7 @@ kvmBackup() {
 					copyBackup;
 				else
 					${lvr} -f ${lv_path}_snap;
+					ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "ls -dt ${iRemotePath}/vms/${hName}.${iVolumeGroup}-${iName}* | tail -n +${backupRevisions} | xargs rm -f;";
 					log success "Copy for ${hName}.${iVolumeGroup}-${iName} to backup server ${remoteAddress} was successful.";
 				fi;
 			};
@@ -179,6 +187,7 @@ kvmBackup() {
 					copyBackup;
 				else
 					${lvr} -f ${lv_path}_snap;
+					ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "ls -dt ${iRemotePath}/vms/${hName}.${iVolumeGroup}-${iName}* | tail -n +${backupRevisions} | xargs rm -f;";
 					log success "Copy for ${hName}.${iVolumeGroup}-${iName} to backup server ${remoteAddress} was successful.";
 				fi;
 			};
