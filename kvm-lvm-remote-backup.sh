@@ -124,8 +124,11 @@ kvmBackup() {
 
 	date=$(date +%Y-%m-%d_%H.%M.%S);
 
+	# Create Remote Folder Structure
+	ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "mkdir -p ${iRemotePath}/vms";
+
 	# Dump KVM Domain XML file
-	virsh dumpxml ${iDomName} | ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "cat > ${iRemotePath}/vms/${iDomName}.${date}.xml"
+	virsh dumpxml ${iDomName} | ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "cat > ${iRemotePath}/vms/${iDomName}.${date}.xml";
 	ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "ls -dt ${iRemotePath}/vms/${iDomName}.* | tail -n +${backupRevisions} | xargs rm -f;";
 
 	for lvm in `virsh dumpxml "${iDomName}" | grep 'source dev' | grep -o "'.*'" | tr -d "'" | rev | cut -d '/' -f1 | rev`; do
