@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #--========================================--#
-# Set Varibles				#
+# Set Varibles				     #
 # Only Change the below varibles you need to #
 #--========================================--#
 remotePort="22";
