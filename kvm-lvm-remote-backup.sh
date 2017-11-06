@@ -23,7 +23,7 @@ lvr=$(which lvremove);
 [ ! -d "${scriptPath}/key" ] || [ ! -d "${scriptPath}/logs" ] && mkdir -p "${scriptPath}"/{key,logs};
 
 # Check if ssh key exists
-[ ! -f "${scriptPath}/key/lvm-backup" ] && { ssh-keygen -b 4096 -q -t rsa -N "" -C "Remote KVM LVM Backups" -f "${scriptPath}/key/lvm-backup" && chmod 644 ${scriptPath}/key/lvm-backup* && echo -e "\nSSH Key has been created in ${scriptPath}/key called lvm-backup.pub\nYou must copy the key to your remote server.\nSSH key copy command: cat ${scriptPath}/key/lvm-backup.pub | ssh -p ${remotePort} ${remoteUser}@${remoteAddress} 'cat >> .ssh/authorized_keys'\n" && exit 1; };
+[ ! -f "${scriptPath}/key/lvm-backup" ] && { ssh-keygen -b 4096 -q -t rsa -N "" -C "Remote KVM LVM Backups" -f "${scriptPath}/key/lvm-backup" && chmod 600 ${scriptPath}/key/lvm-backup* && echo -e "\nSSH Key has been created in ${scriptPath}/key called lvm-backup.pub\nYou must copy the key to your remote server.\nSSH key copy command: cat ${scriptPath}/key/lvm-backup.pub | ssh -p ${remotePort} ${remoteUser}@${remoteAddress} 'cat >> .ssh/authorized_keys'\n" && exit 1; };
 
 log() {
 	if [ "${1}" == "error" ]; then
