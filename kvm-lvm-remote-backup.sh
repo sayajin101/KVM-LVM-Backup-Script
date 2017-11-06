@@ -16,7 +16,9 @@ configFile="${scriptPath}/kvm-lvm-remote-backup.cfg";
 [ ! -f ${configFile} ] && { echo -e "\nConfig file not found, creating it\nPlease add your LVMs to the config file before continuing\n" && touch ${configFile} && exit 1; };
 [ ! -s ${configFile} ] && { echo -e "\n${configFile} is empty, please fill in your LVM details\n" && exit 1; };
 
+[ $(which lvcreate > /dev/null 2>&1; echo ${?}) -ne 0 ] && { echo -e "\nlvcreate is required...exiting"; exit 1; };
 lvc=$(which lvcreate);
+[ $(which lvremove > /dev/null 2>&1; echo ${?}) -ne 0 ] && { echo -e "\nlvremove is required...exiting"; exit 1; };
 lvr=$(which lvremove);
 
 # Check Folder Structure
