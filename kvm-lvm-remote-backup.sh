@@ -77,6 +77,9 @@ lvmBackup() {
 
 	date=$(date +%Y-%m-%d_%H.%M.%S);
 
+	# Create Remote Folder Structure
+	ssh -i ${scriptPath}/key/lvm-backup -p ${remotePort} ${remoteUser}@${remoteAddress} "mkdir -p ${iRemotePath}/vms";	
+
 	if [ "${iCompressionLocation}" == "remote" ]; then
 		${lvc} -s --size=${size}G -n ${iName}_snap ${lv_path};
 		copyBackup() {
